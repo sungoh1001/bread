@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const { VueLoaderPlugin } = require('vue-loader')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
@@ -163,6 +164,18 @@ module.exports = function (env, argv) {
 			}
 		},
 		plugins : [
+			// sw.js를 build/로 복사 (production 전용)
+			{
+				apply: (compiler) => {
+					compiler.hooks.afterEmit.tap('CopySW', () => {
+						const src = resolve('sw.js')
+						const dest = resolve('build/sw.js')
+						if (fs.existsSync(src)) {
+							fs.copyFileSync(src, dest)
+						}
+					})
+				}
+			},
 			new HtmlWebpackPlugin({
 				template: 'index.html',
 				title: 'Bible',
@@ -208,7 +221,12 @@ module.exports = function (env, argv) {
 			stats: {
 				color: true
 			},
-			port: 8080
+			port: 8080,
+			before: (app) => {
+				app.get('/sw.js', (req, res) => {
+					res.sendFile(resolve('sw.js'))
+				})
+			}
 		},
 		node: {
 			net: 'empty'
