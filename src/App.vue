@@ -26,6 +26,11 @@
     <router-view
       :class="{'menu-open': isMenuOpen }"
     />
+    <multi-tab-bar
+      :tabs.sync="tabs"
+      :active-tab-id.sync="activeTabId"
+      @tab-change="onTabChange"
+    />
   </div>
 </template>
 
@@ -34,6 +39,7 @@ import bible from 'src/assets/ko_rev.json'
 import Header from 'src/components/Header'
 import Menu from 'src/components/Menu'
 import DropDown from 'src/components/DropDown'
+import MultiTabBar from 'src/components/MultiTabBar'
 
 import { ROUTE_NAMES } from 'src/constants'
 
@@ -42,7 +48,8 @@ export default {
   components: {
     'header-area': Header,
     'menu-area': Menu,
-    'drop-down': DropDown
+    'drop-down': DropDown,
+    'multi-tab-bar': MultiTabBar
   },
   data () {
     return {
@@ -50,7 +57,11 @@ export default {
       currentBook: null,
       currentChapter: null,
       isMenuOpen: false,
-      bookMap: {}
+      bookMap: {},
+      tabs: [
+        { id: 1, ref: '창 1:1', version: '개역개정', abbrev: 'gen', chapter: 1 }
+      ],
+      activeTabId: 1
     }
   },
   computed: {
@@ -93,7 +104,20 @@ export default {
         params: { bible },
         query: { book, chapter }
       })
+      // Update active tab with the newly navigated reference
+      const activeTab = this.tabs.find(t => t.id === this.activeTabId)
+      if (activeTab && this.currentBook && this.currentChapter) {
+        activeTab.ref = `${this.currentBook} ${this.currentChapter}장`
+        activeTab.abbrev = book
+        activeTab.chapter = chapter
+      }
       console.log('goTo( book: ', book, ', chapter: ', chapter, ' )')
+    },
+    onTabChange (tab) {
+      if (tab.abbrev && tab.chapter) {
+        this.goTo(tab.abbrev, tab.chapter)
+      }
+      console.log('onTabChange( tab: ', tab, ' )')
     }
   }
 

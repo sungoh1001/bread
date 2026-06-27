@@ -204,6 +204,7 @@ module.exports = function (env, argv) {
 			host: 'localhost',
 			contentBase: false,
 			publicPath: '/',
+			historyApiFallback: true,
 			stats: {
 				color: true
 			},

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "개역 개정 성경",
   "author": "aromkimm",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "webpack-dev-server --inline --lint",
     "build:dev": "webpack --mode development --lint",
