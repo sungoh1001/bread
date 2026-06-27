@@ -149,7 +149,7 @@ export default {
       const activeTab = this.tabs.find(t => t.id === this.activeTabId)
       if (activeTab && book && chapter) {
         const abbr = BOOK_ABBREV[book] || book
-        activeTab.ref = `${abbr} ${chapter}`
+        activeTab.ref = `${abbr}${chapter}`
         activeTab.abbrev = book
         activeTab.chapter = chapter
       }
