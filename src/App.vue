@@ -56,6 +56,7 @@ import AbbrevPopup from 'src/components/AbbrevPopup'
 
 import { ROUTE_NAMES } from 'src/constants'
 import { BOOK_ABBREV } from 'src/bookAbbrev'
+import { loadTabs, saveTabs } from 'src/cookie'
 
 export default {
   name: 'Root',
@@ -67,6 +68,7 @@ export default {
     'abbrev-popup': AbbrevPopup
   },
   data () {
+    const saved = loadTabs()
     return {
       categoryOpen: null,
       currentBook: null,
@@ -74,10 +76,10 @@ export default {
       isMenuOpen: false,
       showPopup: false,
       bookMap: {},
-      tabs: [
-        { id: 1, ref: '?책 ?장', version: '개역개정', abbrev: null, chapter: null }
-      ],
-      activeTabId: 1
+      tabs: saved
+        ? saved.tabs
+        : [{ id: 1, ref: '?책 ?장', version: '개역개정', abbrev: null, chapter: null }],
+      activeTabId: saved ? saved.activeTabId : 1
     }
   },
   computed: {
@@ -87,6 +89,17 @@ export default {
           ? `${this.currentBook} ${this.currentChapter}장`
           : null
       )   
+    }
+  },
+  watch: {
+    tabs: {
+      handler () {
+        saveTabs(this.tabs, this.activeTabId)
+      },
+      deep: true
+    },
+    activeTabId () {
+      saveTabs(this.tabs, this.activeTabId)
     }
   },
   created () {
