@@ -2,13 +2,13 @@
   <div class="multi-tab-bar">
     <div class="tab-scroll">
       <button
-        v-for="tab in tabs"
+        v-for="(tab, index) in tabs"
         :key="tab.id"
         class="tab-item"
         :class="{ active: tab.id === activeTabId }"
         @click="activateTab(tab.id)"
       >
-        <span class="tab-ref">{{ tab.ref }}</span>
+        <span class="tab-ref">{{ index + 1 }}.{{ tab.ref }}</span>
         <span class="tab-version">{{ tab.version }}</span>
         <i
           v-if="tab.id === activeTabId"
