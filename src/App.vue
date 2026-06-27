@@ -26,6 +26,11 @@
     <router-view
       :class="{'menu-open': isMenuOpen }"
     />
+    <div
+      v-show="isMenuOpen"
+      class="menu-backdrop"
+      @click="closeMenu"
+    />
     <multi-tab-bar
       :tabs.sync="tabs"
       :active-tab-id.sync="activeTabId"
@@ -42,6 +47,7 @@ import DropDown from 'src/components/DropDown'
 import MultiTabBar from 'src/components/MultiTabBar'
 
 import { ROUTE_NAMES } from 'src/constants'
+import { BOOK_ABBREV } from 'src/bookAbbrev'
 
 export default {
   name: 'Root',
@@ -59,7 +65,7 @@ export default {
       isMenuOpen: false,
       bookMap: {},
       tabs: [
-        { id: 1, ref: '창 1:1', version: '개역개정', abbrev: 'gen', chapter: 1 }
+        { id: 1, ref: '?책 ?장', version: '개역개정', abbrev: null, chapter: null }
       ],
       activeTabId: 1
     }
@@ -83,6 +89,9 @@ export default {
     })
   },
   methods: {
+    closeMenu () {
+      this.isMenuOpen = false
+    },
     toggleMenu () {
       this.isMenuOpen = !this.isMenuOpen
       console.log('toggleMenu( isMenuOpen: ', this.isMenuOpen, ' )')
@@ -104,10 +113,11 @@ export default {
         params: { bible },
         query: { book, chapter }
       })
-      // Update active tab with the newly navigated reference
+      // Update active tab with the newly navigated reference (약자 형식: 창 1, 고전 1)
       const activeTab = this.tabs.find(t => t.id === this.activeTabId)
-      if (activeTab && this.currentBook && this.currentChapter) {
-        activeTab.ref = `${this.currentBook} ${this.currentChapter}장`
+      if (activeTab && book && chapter) {
+        const abbr = BOOK_ABBREV[book] || book
+        activeTab.ref = `${abbr} ${chapter}`
         activeTab.abbrev = book
         activeTab.chapter = chapter
       }

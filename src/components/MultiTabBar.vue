@@ -10,6 +10,11 @@
       >
         <span class="tab-ref">{{ tab.ref }}</span>
         <span class="tab-version">{{ tab.version }}</span>
+        <i
+          v-if="tab.id === activeTabId"
+          class="tab-close im im-x-mark"
+          @click.stop="removeTab(tab.id)"
+        />
       </button>
       <button
         class="tab-add-btn"
@@ -28,7 +33,7 @@ export default {
     tabs: {
       type: Array,
       default: () => [
-        { id: 1, ref: '창 1:1', version: '개역개정' }
+        { id: 1, ref: '?책 ?장', version: '개역개정' }
       ]
     },
     activeTabId: {
@@ -53,10 +58,23 @@ export default {
         this.$emit('tab-change', { ...tab })
       }
     },
+    removeTab (id) {
+      if (this.tabs.length <= 1) return
+      const index = this.tabs.findIndex(t => t.id === id)
+      const newTabs = this.tabs.filter(t => t.id !== id)
+      this.$emit('update:tabs', newTabs)
+      if (id === this.activeTabId) {
+        const nextIndex = index >= newTabs.length ? index - 1 : index
+        const nextId = newTabs[nextIndex].id
+        this.$emit('update:activeTabId', nextId)
+        const nextTab = newTabs[nextIndex]
+        this.$emit('tab-change', { ...nextTab })
+      }
+    },
     addNewTab () {
       const newTab = {
         id: this.nextId,
-        ref: '창 1:1',
+        ref: '?책 ?장',
         version: '개역개정'
       }
       const newTabs = [...this.tabs, newTab]
@@ -106,6 +124,7 @@ $bar-height: 64px;
 }
 
 .tab-item {
+  position: relative;
   flex-shrink: 0;
   display: inline-flex;
   flex-direction: column;
@@ -113,7 +132,7 @@ $bar-height: 64px;
   justify-content: center;
   min-width: 64px;
   height: 44px;
-  padding: 6px 16px;
+  padding: 6px 3px;
   margin-right: 6px;
   border: none;
   border-radius: 12px;
@@ -145,6 +164,21 @@ $bar-height: 64px;
   font-weight: 400;
   opacity: 0.7;
   line-height: 1.3;
+}
+
+.tab-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.6;
+  padding: 2px;
+
+  &:hover {
+    opacity: 1;
+    color: #2C1810;
+  }
 }
 
 .tab-add-btn {
