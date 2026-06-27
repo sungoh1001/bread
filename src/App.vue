@@ -5,6 +5,7 @@
       :page="page"
       :is-menu-open="isMenuOpen"
       @toggleMenu="toggleMenu"
+      @togglePopup="togglePopup"
     />
     <menu-area
       :menus="bookMap"
@@ -102,6 +103,9 @@ export default {
       this.isMenuOpen = false
     },
     toggleMenu () {
+      this.isMenuOpen = !this.isMenuOpen
+    },
+    togglePopup () {
       this.showPopup = !this.showPopup
     },
     closePopupMenu () {
