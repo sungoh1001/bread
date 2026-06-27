@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-area 
+    <header-area
       title="개역 개정 성경"
       :page="page"
       :is-menu-open="isMenuOpen"
@@ -36,6 +36,12 @@
       :active-tab-id.sync="activeTabId"
       @tab-change="onTabChange"
     />
+    <abbrev-popup
+      :visible="showPopup"
+      :book-map="bookMap"
+      @close="closePopupMenu"
+      @go-to="onPopupGoTo"
+    />
   </div>
 </template>
 
@@ -45,6 +51,7 @@ import Header from 'src/components/Header'
 import Menu from 'src/components/Menu'
 import DropDown from 'src/components/DropDown'
 import MultiTabBar from 'src/components/MultiTabBar'
+import AbbrevPopup from 'src/components/AbbrevPopup'
 
 import { ROUTE_NAMES } from 'src/constants'
 import { BOOK_ABBREV } from 'src/bookAbbrev'
@@ -55,7 +62,8 @@ export default {
     'header-area': Header,
     'menu-area': Menu,
     'drop-down': DropDown,
-    'multi-tab-bar': MultiTabBar
+    'multi-tab-bar': MultiTabBar,
+    'abbrev-popup': AbbrevPopup
   },
   data () {
     return {
@@ -63,6 +71,7 @@ export default {
       currentBook: null,
       currentChapter: null,
       isMenuOpen: false,
+      showPopup: false,
       bookMap: {},
       tabs: [
         { id: 1, ref: '?책 ?장', version: '개역개정', abbrev: null, chapter: null }
@@ -93,8 +102,14 @@ export default {
       this.isMenuOpen = false
     },
     toggleMenu () {
-      this.isMenuOpen = !this.isMenuOpen
-      console.log('toggleMenu( isMenuOpen: ', this.isMenuOpen, ' )')
+      this.showPopup = !this.showPopup
+    },
+    closePopupMenu () {
+      this.showPopup = false
+    },
+    onPopupGoTo ({ book, chapter }) {
+      this.showPopup = false
+      this.goTo(book, chapter)
     },
     toggleCategory (category) {
       this.categoryOpen = (this.categoryOpen === category) ? null : category
