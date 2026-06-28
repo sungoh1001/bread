@@ -78,7 +78,7 @@ export default {
       bookMap: {},
       tabs: saved
         ? saved.tabs
-        : [{ id: 1, ref: '빈탭', version: '개역개정', abbrev: null, chapter: null }],
+        : [{ id: 1, ref: '---', version: '개역개정', abbrev: null, chapter: null }],
       activeTabId: saved ? saved.activeTabId : 1
     }
   },
