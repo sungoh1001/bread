@@ -1,14 +1,20 @@
 // Service Worker — 오프라인 캐싱
-const CACHE_NAME = 'bible-cache-v1'
+const CACHE_NAME = 'bible-cache-v2'
 
 // 설치 즉시 활성화 (대기 건너뛰기)
 self.addEventListener('install', (event) => {
   self.skipWaiting()
 })
 
-// 활성화 시 모든 클라이언트 제어
+// 활성화 시 이전 캐시 삭제 + 클라이언트 제어
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim())
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      )
+    }).then(() => self.clients.claim())
+  )
 })
 
 // Cache-first 전략: 캐시 먼저, 없으면 네트워크 + 캐시 저장
