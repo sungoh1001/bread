@@ -15,6 +15,12 @@
     >
       <i class="im im-menu" />
     </button>
+    <button
+      class="darkmode-toggle"
+      @click="listeners.toggleDarkMode"
+    >
+      {{ props.darkMode ? '☀' : '☾' }}
+    </button>
   </header>
 </template>
 
@@ -34,6 +40,10 @@ export default {
     isMenuOpen: {
       type: Boolean,
       required: true
+    },
+    darkMode: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -73,6 +83,22 @@ header {
       color: #fff;
       font-size: 16px;
     }
+  }
+  .darkmode-toggle {
+    width: 30px;
+    height: 30px;
+    margin-left: 6px;
+    border: none;
+    border-radius: 6px;
+    background: #444;
+    color: #ffd43b;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
   }
 }
 </style>

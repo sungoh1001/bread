@@ -1,11 +1,16 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :class="{ dark: darkMode }"
+  >
     <header-area
       title="개역 개정 성경"
       :page="page"
       :is-menu-open="isMenuOpen"
+      :dark-mode="darkMode"
       @toggleMenu="toggleMenu"
       @togglePopup="togglePopup"
+      @toggleDarkMode="toggleDarkMode"
     />
     <menu-area
       :menus="bookMap"
@@ -56,7 +61,7 @@ import AbbrevPopup from 'src/components/AbbrevPopup'
 
 import { ROUTE_NAMES } from 'src/constants'
 import { BOOK_ABBREV } from 'src/bookAbbrev'
-import { loadTabs, saveTabs } from 'src/cookie'
+import { loadTabs, saveTabs, getCookie, setCookie } from 'src/cookie'
 
 export default {
   name: 'Root',
@@ -75,6 +80,7 @@ export default {
       currentChapter: null,
       isMenuOpen: false,
       showPopup: false,
+      darkMode: getCookie('bible_dark') === '1',
       bookMap: {},
       tabs: saved
         ? saved.tabs
@@ -120,6 +126,10 @@ export default {
     },
     togglePopup () {
       this.showPopup = !this.showPopup
+    },
+    toggleDarkMode () {
+      this.darkMode = !this.darkMode
+      setCookie('bible_dark', this.darkMode ? '1' : '0')
     },
     closePopupMenu () {
       this.showPopup = false
