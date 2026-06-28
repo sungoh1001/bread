@@ -33,7 +33,7 @@ export default {
     tabs: {
       type: Array,
       default: () => [
-        { id: 1, ref: '?책 ?장', version: '개역개정' }
+        { id: 1, ref: '빈탭', version: '개역개정' }
       ]
     },
     activeTabId: {
@@ -74,7 +74,7 @@ export default {
     addNewTab () {
       const newTab = {
         id: this.nextId,
-        ref: '?책 ?장',
+        ref: '빈탭',
         version: '개역개정'
       }
       const newTabs = [...this.tabs, newTab]

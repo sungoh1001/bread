@@ -178,7 +178,7 @@ module.exports = function (env, argv) {
 			},
 			new HtmlWebpackPlugin({
 				template: 'index.html',
-				title: 'Bible',
+				title: 'Bread',
 				inject: true,
 				minify: {
 					removeComments: true,
