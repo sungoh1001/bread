@@ -65,6 +65,18 @@ header {
     height: 30px;
     font-size: 0;
     margin-right: 12px;
+    background: #888;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .im {
+      color: #fff;
+      font-size: 16px;
+    }
   }
   .popup-button {
     width: 30px;
