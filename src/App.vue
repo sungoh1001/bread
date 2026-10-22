@@ -8,6 +8,7 @@
       :page="page"
       :is-menu-open="isMenuOpen"
       :dark-mode="darkMode"
+      :visible="isBarsVisible"
       @toggleMenu="toggleMenu"
       @togglePopup="togglePopup"
       @toggleDarkMode="toggleDarkMode"
@@ -30,8 +31,9 @@
       </template>
     </menu-area>
     <router-view
-      :class="{ 'menu-open': isMenuOpen, 'tab-bar-hidden': !isTabBarVisible }"
-      @toggle-tab-bar="toggleTabBar"
+      :class="{ 'menu-open': isMenuOpen, 'bars-hidden': !isBarsVisible }"
+      @toggle-bars="toggleBars"
+      @swipe="onSwipe"
     />
     <div
       v-show="isMenuOpen"
@@ -39,7 +41,7 @@
       @click="closeMenu"
     />
     <multi-tab-bar
-      v-show="isTabBarVisible"
+      v-show="isBarsVisible"
       :tabs.sync="tabs"
       :active-tab-id.sync="activeTabId"
       @tab-change="onTabChange"
@@ -62,8 +64,10 @@ import MultiTabBar from 'src/components/MultiTabBar'
 import AbbrevPopup from 'src/components/AbbrevPopup'
 
 import { ROUTE_NAMES } from 'src/constants'
-import { BOOK_ABBREV } from 'src/bookAbbrev'
+import { OT_BOOKS, NT_BOOKS, BOOK_ABBREV } from 'src/bookAbbrev'
 import { loadTabs, saveTabs, getCookie, setCookie } from 'src/cookie'
+
+const CANON_BOOKS = [...OT_BOOKS, ...NT_BOOKS]
 
 export default {
   name: 'Root',
@@ -81,7 +85,7 @@ export default {
       currentBook: null,
       currentChapter: null,
       isMenuOpen: false,
-      isTabBarVisible: true,
+      isBarsVisible: true,
       showPopup: false,
       darkMode: getCookie('bible_dark') === '1',
       bookMap: {},
@@ -102,7 +106,7 @@ export default {
   },
   watch: {
     '$route' (route) {
-      this.isTabBarVisible = route.name !== ROUTE_NAMES.PAGE
+      this.isBarsVisible = route.name !== ROUTE_NAMES.PAGE
     },
     tabs: {
       handler () {
@@ -130,8 +134,8 @@ export default {
     toggleMenu () {
       this.isMenuOpen = !this.isMenuOpen
     },
-    toggleTabBar () {
-      this.isTabBarVisible = !this.isTabBarVisible
+    toggleBars () {
+      this.isBarsVisible = !this.isBarsVisible
     },
     togglePopup () {
       this.showPopup = !this.showPopup
@@ -179,6 +183,38 @@ export default {
         this.goTo(tab.abbrev, tab.chapter)
       }
       console.log('onTabChange( tab: ', tab, ' )')
+    },
+    onSwipe (direction) {
+      const book = this.$route.query.book
+      const chapter = Number(this.$route.query.chapter)
+      const bookIndex = CANON_BOOKS.indexOf(book)
+      if (!book || !chapter || bookIndex === -1) return
+      const chapterCount = this.bookMap[book].items
+      let targetBook = book
+      let targetChapter = chapter
+      if (direction === 'next') {
+        if (chapter < chapterCount) {
+          targetChapter = chapter + 1
+        } else if (bookIndex < CANON_BOOKS.length - 1) {
+          targetBook = CANON_BOOKS[bookIndex + 1]
+          targetChapter = 1
+        } else {
+          return
+        }
+      } else if (direction === 'prev') {
+        if (chapter > 1) {
+          targetChapter = chapter - 1
+        } else if (bookIndex > 0) {
+          targetBook = CANON_BOOKS[bookIndex - 1]
+          targetChapter = this.bookMap[targetBook].items
+        } else {
+          return
+        }
+      } else {
+        return
+      }
+      this.goTo(targetBook, targetChapter)
+      window.scrollTo(0, 0)
     }
   }
 

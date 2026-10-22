@@ -1,5 +1,5 @@
 <template functional>
-  <header>
+  <header v-show="props.visible">
     <h1>{{ props.title }}</h1>
     <button
       class="menu-button" 
@@ -44,6 +44,10 @@ export default {
     darkMode: {
       type: Boolean,
       default: false
+    },
+    visible: {
+      type: Boolean,
+      required: true
     }
   }
 }

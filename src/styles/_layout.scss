@@ -36,7 +36,8 @@ main {
   &.menu-open {
     padding-left: $nav-width;
   }
-  &.tab-bar-hidden {
+  &.bars-hidden {
+    padding-top: 0;
     padding-bottom: 0;
   }
   @include mini {
