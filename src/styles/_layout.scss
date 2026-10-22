@@ -36,6 +36,9 @@ main {
   &.menu-open {
     padding-left: $nav-width;
   }
+  &.tab-bar-hidden {
+    padding-bottom: 0;
+  }
   @include mini {
     &.menu-open {
       overflow: hidden;

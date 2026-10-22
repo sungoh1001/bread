@@ -30,7 +30,8 @@
       </template>
     </menu-area>
     <router-view
-      :class="{'menu-open': isMenuOpen }"
+      :class="{ 'menu-open': isMenuOpen, 'tab-bar-hidden': !isTabBarVisible }"
+      @toggle-tab-bar="toggleTabBar"
     />
     <div
       v-show="isMenuOpen"
@@ -38,6 +39,7 @@
       @click="closeMenu"
     />
     <multi-tab-bar
+      v-show="isTabBarVisible"
       :tabs.sync="tabs"
       :active-tab-id.sync="activeTabId"
       @tab-change="onTabChange"
@@ -79,6 +81,7 @@ export default {
       currentBook: null,
       currentChapter: null,
       isMenuOpen: false,
+      isTabBarVisible: true,
       showPopup: false,
       darkMode: getCookie('bible_dark') === '1',
       bookMap: {},
@@ -98,6 +101,9 @@ export default {
     }
   },
   watch: {
+    '$route' (route) {
+      this.isTabBarVisible = route.name !== ROUTE_NAMES.PAGE
+    },
     tabs: {
       handler () {
         saveTabs(this.tabs, this.activeTabId)
@@ -123,6 +129,9 @@ export default {
     },
     toggleMenu () {
       this.isMenuOpen = !this.isMenuOpen
+    },
+    toggleTabBar () {
+      this.isTabBarVisible = !this.isTabBarVisible
     },
     togglePopup () {
       this.showPopup = !this.showPopup
