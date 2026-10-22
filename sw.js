@@ -1,5 +1,5 @@
 // Service Worker — 오프라인 캐싱
-const CACHE_NAME = 'bible-cache-v2'
+const CACHE_NAME = 'bible-cache-v3'
 
 // 설치 즉시 활성화 (대기 건너뛰기)
 self.addEventListener('install', (event) => {
