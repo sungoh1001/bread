@@ -1,4 +1,10 @@
 // 다크모드 스타일
+// 스크롤 영역 전체를 덮도록 html/body 배경도 함께 바꾼다.
+html.dark,
+html.dark body {
+  background: #1a1a1a;
+}
+
 #app.dark {
   background: #1a1a1a;
   color: #e0e0e0;

@@ -116,6 +116,12 @@ export default {
     },
     activeTabId () {
       saveTabs(this.tabs, this.activeTabId)
+    },
+    darkMode: {
+      handler (value) {
+        document.documentElement.classList.toggle('dark', value)
+      },
+      immediate: true
     }
   },
   created () {
