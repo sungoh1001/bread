@@ -1,5 +1,8 @@
 <template>
-  <main id="page">
+  <main
+    id="page"
+    @click="$emit('toggle-tab-bar')"
+  >
     <ul class="bible">
       <li
         v-for="(line, index) in bible"
