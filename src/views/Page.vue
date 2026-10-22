@@ -1,7 +1,10 @@
 <template>
   <main
     id="page"
-    @click="$emit('toggle-tab-bar')"
+    @click="onClick"
+    @touchstart="onTouchStart"
+    @touchend="onTouchEnd"
+    @touchcancel="onTouchCancel"
   >
     <ul class="bible">
       <li
@@ -25,6 +28,43 @@ export default {
     bible: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      touchStartX: null,
+      touchStartY: null,
+      suppressClick: false
+    }
+  },
+  methods: {
+    onClick () {
+      if (this.suppressClick) {
+        this.suppressClick = false
+        return
+      }
+      this.$emit('toggle-bars')
+    },
+    onTouchStart (event) {
+      const touch = event.touches[0]
+      this.touchStartX = touch.clientX
+      this.touchStartY = touch.clientY
+      this.suppressClick = false
+    },
+    onTouchEnd (event) {
+      if (this.touchStartX === null) return
+      const touch = event.changedTouches[0]
+      const dx = touch.clientX - this.touchStartX
+      const dy = touch.clientY - this.touchStartY
+      this.touchStartX = null
+      this.touchStartY = null
+      if (Math.abs(dx) < 50 || Math.abs(dx) <= Math.abs(dy)) return
+      this.suppressClick = true
+      this.$emit('swipe', dx < 0 ? 'next' : 'prev')
+    },
+    onTouchCancel () {
+      this.touchStartX = null
+      this.touchStartY = null
     }
   }
 }
