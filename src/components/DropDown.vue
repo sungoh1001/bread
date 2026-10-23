@@ -79,7 +79,7 @@ export default {
     li {
       float: left;
       height: 35px;
-      width: 59px;
+      width: 20%;
       display: flex;
       justify-content: center;
       align-items: center;
