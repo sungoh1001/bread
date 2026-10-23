@@ -2,3 +2,6 @@
 .git
 /node_modules/
 /build/
+
+# 재생성용 성경 원문 (대용량/저작권 — 커밋하지 않음)
+/src/assets/ko-rev-cp949.txt
